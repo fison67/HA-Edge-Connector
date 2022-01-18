@@ -1,0 +1,19 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "Only a single instance is necessary."
+        },
+        "step": {
+            "user": {
+                "description": "",
+                "title": "ST-Edge-Connector Settings",
+                "data": {
+                    "hub_addr": "ST Hub Address",
+                    "ha_addr": "Homeassistant Address",
+                    "ha_port": "Homeassistant Port"
+                }
+            }
+        }
+    },
+    "title": "ST-Edge-Connector"
+}

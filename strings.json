@@ -1,0 +1,16 @@
+{
+  "title": "ST-Edge-Connector",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up ST-Edge-Connector",
+        "description": "Do you want to set up HA-Connector.",
+        "data": {
+        }
+      }
+    },
+    "abort": {
+      "one_instance_allowed": "Only a single instance is necessary."
+    }
+  }
+}

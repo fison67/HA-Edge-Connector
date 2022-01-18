@@ -1,0 +1,5 @@
+# Example services.yaml entry
+
+refresh:
+  # Description of the service
+  description: Refresh Homeassistant Devices List

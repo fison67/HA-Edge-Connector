@@ -1,0 +1,21 @@
+
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "하나의 ST-Edge-Connector만 구성할 수 있습니다."
+        },
+        "step": {
+            "user": {
+                "description": "ST-Edge-Connector 추가하기 위한 설정값을 입력하세요.",
+                "title": "ST-Edge-Connector 설정하기",
+                "data": {
+                  "hub_addr": "ST Hub 주소",
+                  "ha_addr": "HA 설치된 주소",
+                  "ha_port": "Component에서 사용할 포트"
+                }
+
+            }
+        }
+    },
+    "title": "ST-Edge-Connector"
+}

@@ -1,0 +1,10 @@
+{
+  "domain": "st_edge_connector",
+  "name": "ST-Edge-Connector",
+  "documentation": "https://github.com/fison67/HA-Edge-Connector",
+  "dependencies": [],
+  "codeowners": ["@fison67"],
+  "requirements": [],
+  "config_flow": true,
+  "version": "1.0.1"
+}
