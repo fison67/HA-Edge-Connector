@@ -1,38 +1,38 @@
 # HA-Edge-Connector
 
-1. Required
- a. Smartthings Hub & Homeassistant must be in same network.
- b. Multicast function must be enabled on router.
- 
-2. Install
- a. Copy st_edge_connector folder to /YOUR_HA_PATH/custom_components
- b. Add a ST Edge Connector on integrations 
-   HUB ADDR: ST HUB Address.
-   HA ADDR: HA Address.
-   HA PORT: Non used port for TCP
-   
-3. ADD
-  a. Add a device on st_edge_connector.
-  b. Add a device on smartthings app
-  
-4. Support devices.
-  a. HA Switch
-     Without attributes [power, energy]
-     switch.samplename
-  b. HA Plug
-     With attributes [power, energy]
-     switch.samplename
-  c. HA Light
-     With attributes supported_color_modes [color_temp]
-     light.samplename
-  d. HA White Light
-     With attributes supported_color_modes [brigtness]
-     light.samplename
-  e. HA Cover
-     cover.samplename
-  f. HA Motion
-     With attributes [occupancy, battery]
-     binary_sensor.samplename
-  g. HA Contact
-     With attributes [contact, battery]
-     binary_sensor.samplename
+1. Required<br/>
+ a. Smartthings Hub & Homeassistant must be in same network.<br/>
+ b. Multicast function must be enabled on router.<br/>
+ <br/><br/>
+2. Install<br/>
+ a. Copy st_edge_connector folder to /YOUR_HA_PATH/custom_components<br/>
+ b. Add a ST Edge Connector on integrations <br/>
+   HUB ADDR: ST HUB Address.<br/>
+   HA ADDR: HA Address.<br/>
+   HA PORT: Non used port for TCP<br/>
+<br/><br/>
+3. ADD<br/>
+  a. Add a device on st_edge_connector.<br/>
+  b. Add a device on smartthings app<br/>
+<br/><br/>
+4. Support devices.<br/>
+  a. HA Switch<br/>
+     Without attributes [power, energy]<br/>
+     switch.samplename<br/>
+  b. HA Plug<br/>
+     With attributes [power, energy]<br/>
+     switch.samplename<br/>
+  c. HA Light<br/>
+     With attributes supported_color_modes [color_temp]<br/>
+     light.samplename<br/>
+  d. HA White Light<br/>
+     With attributes supported_color_modes [brigtness]<br/>
+     light.samplename<br/>
+  e. HA Cover<br/>
+     cover.samplename<br/>
+  f. HA Motion<br/>
+     With attributes [occupancy, battery]<br/>
+     binary_sensor.samplename<br/>
+  g. HA Contact<br/>
+     With attributes [contact, battery]<br/>
+     binary_sensor.samplename<br/>
