@@ -36,3 +36,22 @@
 &nbsp;&nbsp;&nbsp;&nbsp;g. HA Contact<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With attributes [contact, battery]<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;binary_sensor.samplename<br/>
+
+<br/><br/>
+<b>5. Sample Images.</b><br/>
+<img src="./imgs/edge_cordinator.png" width="500px"><br/>
+<img src="./imgs/intergration.jpg" width="500px"><br/>
+<img src="./imgs/device.png" width="500px"><br/>
+<img src="./imgs/list.png" width="500px"><br/>
+<br/><b>Pairing</b><br/>
+<img src="./imgs/pairing.png" width="500px"><br/>
+<br/><b>Plug</b><br/>
+<img src="./imgs/plug.png" width="500px"><br/>
+<br/><b>Light White</b><br/>
+<img src="./imgs/light-white.png" width="500px"><br/>
+<br/><b>Cover</b><br/>
+<img src="./imgs/cover.png" width="500px"><br/>
+<br/><b>Contact</b><br/>
+<img src="./imgs/contact.png" width="500px"><br/>
+<br/><b>Motion</b><br/>
+<img src="./imgs/motion.png" width="500px"><br/>
