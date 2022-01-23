@@ -1,9 +1,20 @@
 # HA-Edge-Connector
 
+<h3>Homeassistant to Smartthings</h3>
+<br/><br/>
+
+## Donation
+If this project helps you, you can give me a cup of coffee<br/>
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/fison67)
+<br/><br/>
+
+## Setup
 <b>1. Required</b><br/>
 &nbsp;&nbsp;a. Smartthings Hub & Homeassistant must be in same network.<br/>
 &nbsp;&nbsp;b. Multicast function must be enabled on router.<br/>
- <br/><br/>
+&nbsp;&nbsp;c. This connector use an udp 30000 port.<br/>
+<br/><br/>
+
 <b>2. Install</b><br/>
 &nbsp;&nbsp;a. Copy st_edge_connector folder to /YOUR_HA_PATH/custom_components<br/>
 &nbsp;&nbsp;b. Add a ST Edge Connector on integrations <br/>
@@ -36,6 +47,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;g. HA Contact<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With attributes [contact, battery]<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;binary_sensor.samplename<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;h. HA Presence<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device_tracker.samplename<br/>
 
 <br/><br/>
 <b>5. Sample Images.</b><br/>
