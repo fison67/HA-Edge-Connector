@@ -92,25 +92,24 @@ class EdgeDriver:
         return result
 
     def processPairing(self, data, addr):
-
-        stateList = self.hass.states.async_all()
-
-        content = self.entity_registry._data_to_save()
-        title = 'st_edge_connector.' + data
-        list = []
-        for entity in content["entities"]:
-            entity_id = entity["entity_id"]
-            if entity_id.startswith(title):
-                origianl_entity_id = data + "." + entity_id[(len(title)+1):len(entity_id)]
-                targetState = {}
-                for state in stateList:
-                    if state.entity_id == origianl_entity_id:
-                        targetState = state
-                        break
-                list.append({"id":origianl_entity_id, "attributes": targetState.as_dict()["attributes"]})
-
-        content = json.dumps({"port":self.tcpPort, "data":list})
         try:
+            stateList = self.hass.states.async_all()
+
+            content = self.entity_registry._data_to_save()
+            title = 'st_edge_connector.' + data
+            list = []
+            for entity in content["entities"]:
+                entity_id = entity["entity_id"]
+                if entity_id.startswith(title):
+                    origianl_entity_id = data + "." + entity_id[(len(title)+1):len(entity_id)]
+                    targetState = {}
+                    for state in stateList:
+                        if state.entity_id == origianl_entity_id:
+                            targetState = state
+                            break
+                    list.append({"id":origianl_entity_id, "attributes": targetState.as_dict()["attributes"]})
+
+            content = json.dumps({"port":self.tcpPort, "data":list})
             self.sock.sendto(content.encode('UTF-8'), addr)
         except Exception as e:
             logging.error("error: ")
@@ -312,8 +311,9 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 self._setError()
         else:
+            logging.warn("Request from " + self.client_address[0])
             self._setError()
-            
+
     def do_GET(self):
         if self.client_address[0] == self.hub_addr:
             result, id, cmd, query = self.getQueryData()
@@ -322,4 +322,5 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 self._setError()
         else:
+            logging.warn("Request from " + self.client_address[0])
             self._setError()
