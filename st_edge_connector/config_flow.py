@@ -98,7 +98,7 @@ class DeviceOptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry):
         self.config_entry = config_entry
         self.updated_config = {}
-        self.accept = ["switch", "cover", "light", "binary_sensor"]
+        self.accept = ["switch", "cover", "light", "binary_sensor", "device_tracker"]
 
     def getAllDeviceNames(self, hass):
         list = hass.states.async_all()
