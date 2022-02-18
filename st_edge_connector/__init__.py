@@ -52,7 +52,7 @@ CONF_HA_PORT        = 'ha_port'
 CONF_BUFFER_SIZE    = 10240
 
 CONF_MCAST_GRP      = '239.255.255.250'
-CONF_MCAST_PORT     = 30000
+CONF_MCAST_PORT     = 33333
 
 
 class EdgeDriver:
