@@ -12,7 +12,7 @@ If this project helps you, you can give me a cup of coffee<br/>
 <b>1. Required</b><br/>
 &nbsp;&nbsp;a. Smartthings Hub & Homeassistant must be in same network.<br/>
 &nbsp;&nbsp;b. Multicast function must be enabled on router.<br/>
-&nbsp;&nbsp;c. This connector use an udp 30000 port.<br/>
+&nbsp;&nbsp;c. This connector use an udp 33333 port.<br/>
 <br/><br/>
 
 <b>2. Install</b><br/>
