@@ -133,13 +133,13 @@ class DeviceOptionsFlowHandler(config_entries.OptionsFlow):
             selected = user_input.get(CONF_DEVICE, "").split("[")
             title = selected[1][0:len(selected[1])]
 
-            device_registry = await self.hass.helpers.device_registry.async_get_registry()
+            device_registry = self.hass.helpers.device_registry.async_get(self.hass)
             device = device_registry.async_get_device(
                 connections={(CONNECTION_UPNP, CONNECTIONS_VALUE)},
                 identifiers={(DOMAIN, IDENTIFIERS_VALUE)},
             )
 
-            entity_registry = await self.hass.helpers.entity_registry.async_get_registry()
+            entity_registry = self.hass.helpers.entity_registry.async_get(self.hass)
             entity = entity_registry.async_get_or_create(
                 DOMAIN,
                 "edge-driver",
