@@ -205,7 +205,7 @@ async def async_setup_entry(hass, config_entry):
     if conf is None:
         conf = config_entry.data
 
-    device_registry = await hass.helpers.device_registry.async_get_registry()
+    device_registry = hass.helpers.device_registry.async_get(hass)
     device = device_registry.async_get_or_create(
         config_entry_id=config_entry.entry_id,
         connections={(CONNECTION_UPNP, CONNECTIONS_VALUE)},
