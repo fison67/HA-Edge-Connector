@@ -38,6 +38,9 @@ from homeassistant.helpers.device_registry import (
 
 from homeassistant.helpers import discovery
 
+from homeassistant.helpers import entity_registry
+from homeassistant.helpers import device_registry
+
 _LOGGER = logging.getLogger(__name__)
 
 NAME                = 'ST Edge Cordinator'
@@ -73,7 +76,7 @@ class EdgeDriver:
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 128)
         self.sock.bind((CONF_MCAST_GRP, CONF_MCAST_PORT))
 
-        self.entity_registry = self.hass.helpers.entity_registry.async_get()
+        self.entity_registry = entity_registry.async_get(self.hass)
 
         t = threading.Thread(target=self.initUDP, args=())
         t.start()
@@ -207,8 +210,7 @@ async def async_setup_entry(hass, config_entry):
     if conf is None:
         conf = config_entry.data
 
-    device_registry = hass.helpers.device_registry.async_get()
-    device = device_registry.async_get_or_create(
+    device = device_registry.async_get(hass).async_get_or_create(
         config_entry_id=config_entry.entry_id,
         connections={(CONNECTION_UPNP, CONNECTIONS_VALUE)},
         identifiers={(DOMAIN, IDENTIFIERS_VALUE)},
