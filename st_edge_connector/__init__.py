@@ -6,6 +6,7 @@ Licensed under MIT
 import requests
 import logging
 import json
+import orjson
 import base64
 import select
 
@@ -72,7 +73,7 @@ class EdgeDriver:
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 128)
         self.sock.bind((CONF_MCAST_GRP, CONF_MCAST_PORT))
 
-        self.entity_registry = self.hass.helpers.entity_registry.async_get(self.hass)
+        self.entity_registry = self.hass.helpers.entity_registry.async_get()
 
         t = threading.Thread(target=self.initUDP, args=())
         t.start()
@@ -95,10 +96,11 @@ class EdgeDriver:
         try:
             stateList = self.hass.states.async_all()
 
-            content = self.entity_registry._data_to_save()
+            content = orjson.dumps(self.entity_registry._data_to_save())
+            content_json = orjson.loads(content)
             title = 'st_edge_connector.' + data
             list = []
-            for entity in content["entities"]:
+            for entity in content_json["entities"]:
                 entity_id = entity["entity_id"]
                 if entity_id.startswith(title):
                     origianl_entity_id = data + "." + entity_id[(len(title)+1):len(entity_id)]
@@ -109,8 +111,8 @@ class EdgeDriver:
                             break
                     list.append({"id":origianl_entity_id, "attributes": targetState.as_dict()["attributes"]})
 
-            content = json.dumps({"port":self.tcpPort, "data":list})
-            self.sock.sendto(content.encode('UTF-8'), addr)
+            content = orjson.dumps({"port":self.tcpPort, "data":list})
+            self.sock.sendto(content, addr)
         except Exception as e:
             logging.error("error: ")
             logging.error(e)
@@ -205,7 +207,7 @@ async def async_setup_entry(hass, config_entry):
     if conf is None:
         conf = config_entry.data
 
-    device_registry = hass.helpers.device_registry.async_get(hass)
+    device_registry = hass.helpers.device_registry.async_get()
     device = device_registry.async_get_or_create(
         config_entry_id=config_entry.entry_id,
         connections={(CONNECTION_UPNP, CONNECTIONS_VALUE)},
