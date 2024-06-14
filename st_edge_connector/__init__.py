@@ -3,6 +3,7 @@ ST Edge Connector
 Copyright (c) 2018 fison67 <fison67@nate.com>
 Licensed under MIT
 """
+import traceback
 import requests
 import logging
 import json
@@ -40,6 +41,8 @@ from homeassistant.helpers import discovery
 
 from homeassistant.helpers import entity_registry
 from homeassistant.helpers import device_registry
+
+from homeassistant.core import callback, State
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -98,27 +101,25 @@ class EdgeDriver:
     def processPairing(self, data, addr):
         try:
             stateList = self.hass.states.async_all()
-
-            content = orjson.dumps(self.entity_registry._data_to_save())
-            content_json = orjson.loads(content)
+            entities = self.entity_registry.entities
             title = 'st_edge_connector.' + data
             list = []
-            for entity in content_json["entities"]:
-                entity_id = entity["entity_id"]
+
+            for entry in entities.values():
+                entity_id = entry.entity_id
                 if entity_id.startswith(title):
                     origianl_entity_id = data + "." + entity_id[(len(title)+1):len(entity_id)]
-                    targetState = {}
+
                     for state in stateList:
                         if state.entity_id == origianl_entity_id:
-                            targetState = state
+                            list.append({"id":origianl_entity_id, "attributes": state.attributes})
                             break
-                    list.append({"id":origianl_entity_id, "attributes": targetState.as_dict()["attributes"]})
 
             content = orjson.dumps({"port":self.tcpPort, "data":list})
             self.sock.sendto(content, addr)
         except Exception as e:
-            logging.error("error: ")
-            logging.error(e)
+            logging.error("error: " + str(e))
+            logging.error(traceback.format_exc())
 
     def procesProtocol(self, data, addr):
         try:
@@ -225,8 +226,15 @@ async def async_setup_entry(hass, config_entry):
     def event_listener(event):
          driver.eventCallback(event)
 
+    @callback
+    def state_change_filter(event_data):
+        if event_data["new_state"] is None:
+            return False
+
+        return True
+
     hass.data[DOMAIN] = driver
-    hass.bus.async_listen(EVENT_STATE_CHANGED, event_listener)
+    hass.bus.async_listen(EVENT_STATE_CHANGED, event_listener, event_filter=state_change_filter)
     return True
 
 
