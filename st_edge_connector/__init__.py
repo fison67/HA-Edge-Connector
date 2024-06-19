@@ -40,9 +40,10 @@ from homeassistant.helpers.device_registry import (
 from homeassistant.helpers import discovery
 
 from homeassistant.helpers import entity_registry
-from homeassistant.helpers import device_registry
 
 from homeassistant.core import callback, State
+
+from collections.abc import Iterable
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -211,7 +212,7 @@ async def async_setup_entry(hass, config_entry):
     if conf is None:
         conf = config_entry.data
 
-    device = device_registry.async_get(hass).async_get_or_create(
+    device = async_get_device_registry(hass).async_get_or_create(
         config_entry_id=config_entry.entry_id,
         connections={(CONNECTION_UPNP, CONNECTIONS_VALUE)},
         identifiers={(DOMAIN, IDENTIFIERS_VALUE)},
