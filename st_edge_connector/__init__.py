@@ -3,9 +3,11 @@ ST Edge Connector
 Copyright (c) 2018 fison67 <fison67@nate.com>
 Licensed under MIT
 """
+import traceback
 import requests
 import logging
 import json
+import orjson
 import base64
 import select
 
@@ -36,6 +38,12 @@ from homeassistant.helpers.device_registry import (
 )
 
 from homeassistant.helpers import discovery
+
+from homeassistant.helpers import entity_registry
+
+from homeassistant.core import callback, State
+
+from collections.abc import Iterable
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -72,7 +80,7 @@ class EdgeDriver:
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 128)
         self.sock.bind((CONF_MCAST_GRP, CONF_MCAST_PORT))
 
-        self.entity_registry = hass.helpers.entity_registry.async_get()
+        self.entity_registry = entity_registry.async_get(self.hass)
 
         t = threading.Thread(target=self.initUDP, args=())
         t.start()
@@ -94,26 +102,25 @@ class EdgeDriver:
     def processPairing(self, data, addr):
         try:
             stateList = self.hass.states.async_all()
-
-            content = self.entity_registry._data_to_save()
+            entities = self.entity_registry.entities
             title = 'st_edge_connector.' + data
             list = []
-            for entity in content["entities"]:
-                entity_id = entity["entity_id"]
+
+            for entry in entities.values():
+                entity_id = entry.entity_id
                 if entity_id.startswith(title):
-                    origianl_entity_id = data + "." + entity_id[(len(title) + 1):len(entity_id)]
-                    targetState = {}
+                    origianl_entity_id = data + "." + entity_id[(len(title)+1):len(entity_id)]
+
                     for state in stateList:
                         if state.entity_id == origianl_entity_id:
-                            targetState = state
+                            list.append({"id":origianl_entity_id, "attributes": state.attributes})
                             break
-                    list.append({"id": origianl_entity_id, "attributes": targetState.as_dict()["attributes"]})
 
-            content = json.dumps({"port": self.tcpPort, "data": list})
-            self.sock.sendto(content.encode('UTF-8'), addr)
+            content = orjson.dumps({"port":self.tcpPort, "data":list})
+            self.sock.sendto(content, addr)
         except Exception as e:
-            logging.error("error: ")
-            logging.error(e)
+            logging.error("error: " + str(e))
+            logging.error(traceback.format_exc())
 
     def procesProtocol(self, data, addr):
         try:
@@ -204,8 +211,7 @@ async def async_setup_entry(hass, config_entry):
     if conf is None:
         conf = config_entry.data
 
-    device_registry = async_get_device_registry(hass)
-    device = device_registry.async_get_or_create(
+    device = async_get_device_registry(hass).async_get_or_create(
         config_entry_id=config_entry.entry_id,
         connections={(CONNECTION_UPNP, CONNECTIONS_VALUE)},
         identifiers={(DOMAIN, IDENTIFIERS_VALUE)},
@@ -220,8 +226,15 @@ async def async_setup_entry(hass, config_entry):
     def event_listener(event):
         driver.eventCallback(event)
 
+    @callback
+    def state_change_filter(event_data):
+        if event_data["new_state"] is None:
+            return False
+
+        return True
+
     hass.data[DOMAIN] = driver
-    hass.bus.async_listen(EVENT_STATE_CHANGED, event_listener)
+    hass.bus.async_listen(EVENT_STATE_CHANGED, event_listener, event_filter=state_change_filter)
     return True
 
 
