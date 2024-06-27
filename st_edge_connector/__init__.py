@@ -47,20 +47,20 @@ from collections.abc import Iterable
 
 _LOGGER = logging.getLogger(__name__)
 
-NAME                = 'ST Edge Cordinator'
-MANUFACTURER        = "fison67"
-MODEL               = 'Edge Driver'
-CONNECTIONS_VALUE   = "fison67"
-IDENTIFIERS_VALUE   = "fison67"
-DOMAIN              = "st_edge_connector"
-VERSION             = "1.0.0"
-CONF_HUB_ADDR       = 'hub_addr'
-CONF_HA_ADDR        = 'ha_addr'
-CONF_HA_PORT        = 'ha_port'
-CONF_BUFFER_SIZE    = 10240
+NAME = 'ST Edge Cordinator'
+MANUFACTURER = "fison67"
+MODEL = 'Edge Driver'
+CONNECTIONS_VALUE = "fison67"
+IDENTIFIERS_VALUE = "fison67"
+DOMAIN = "st_edge_connector"
+VERSION = "1.0.0"
+CONF_HUB_ADDR = 'hub_addr'
+CONF_HA_ADDR = 'ha_addr'
+CONF_HA_PORT = 'ha_port'
+CONF_BUFFER_SIZE = 10240
 
-CONF_MCAST_GRP      = '239.255.255.250'
-CONF_MCAST_PORT     = 33333
+CONF_MCAST_GRP = '239.255.255.250'
+CONF_MCAST_PORT = 33333
 
 
 class EdgeDriver:
@@ -75,7 +75,7 @@ class EdgeDriver:
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP,socket.inet_aton(CONF_MCAST_GRP) + socket.inet_aton(self.ha_addr))
+        self.sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP, socket.inet_aton(CONF_MCAST_GRP) + socket.inet_aton(self.ha_addr))
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 0)
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 128)
         self.sock.bind((CONF_MCAST_GRP, CONF_MCAST_PORT))
@@ -144,28 +144,27 @@ class EdgeDriver:
 
     def initUDP(self):
         while True:
-          data, addr = self.sock.recvfrom(CONF_BUFFER_SIZE)
-          # logging.info("Receive UDP")
-          self.procesProtocol(data, addr)
-
+            data, addr = self.sock.recvfrom(CONF_BUFFER_SIZE)
+            # logging.info("Receive UDP")
+            self.procesProtocol(data, addr)
 
     def current_milli_time(self):
         return round(time.time() * 1000)
 
     def eventCallback(my, event):
         newState = event.data['new_state']
-        id  = newState.entity_id
+        id = newState.entity_id
         target = my.entity_registry.async_get(DOMAIN + "." + id.replace(".", "_"))
         if target is not None:
             try:
                 deviceMap = my.handler.getDeviceDataMap()
                 if id in deviceMap:
                     addr = "http://" + deviceMap[id] + "/push-state"
-                    uuid = "http://" + my.ha_addr  + ":" + str(my.ha_port) + "/" + id
-                    data = json.dumps({"uuid":uuid, "time": my.current_milli_time(), "data":newState.state, "attributes": newState.as_dict().get('attributes')}).encode('UTF-8')
+                    uuid = "http://" + my.ha_addr + ":" + str(my.ha_port) + "/" + id
+                    data = json.dumps({"uuid": uuid, "time": my.current_milli_time(), "data": newState.state, "attributes": newState.as_dict().get('attributes')}).encode('UTF-8')
                     # logging.info(data)
                     res = requests.post(addr, data=data)
-                else :
+                else:
                     logging.warn("Non exist edge address: " + id)
             except Exception as e:
                 logging.error("EventCallback Error: ")
@@ -173,7 +172,7 @@ class EdgeDriver:
 
 
 def base_config_schema(config: dict = {}) -> dict:
-    """Return a shcema configuration dict for HA-Connector."""
+    """Return a schema configuration dict for HA-Connector."""
     if not config:
         config = {
             CONF_HUB_ADDR: "",
@@ -225,7 +224,7 @@ async def async_setup_entry(hass, config_entry):
     driver = EdgeDriver(hass, config_entry)
 
     def event_listener(event):
-         driver.eventCallback(event)
+        driver.eventCallback(event)
 
     @callback
     def state_change_filter(event_data):
@@ -275,8 +274,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _processGet(self, id, cmd, query):
         if cmd == 'refresh':
-            # content = self.entity_registry._data_to_save()
-            content = json.dumps({"state":self.getState(id).as_dict()})
+            content = json.dumps({"state": self.getState(id).as_dict()})
             self._setOK(content)
         else:
             self._setError("")
